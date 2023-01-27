@@ -1,0 +1,64 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+main{
+    display: grid;
+    gap: 20px;
+}
+#error{
+    color: red;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.cards-container{
+    display: grid;
+    gap: 15px;
+    justify-items: center;
+    grid-template-columns: repeat(auto-fill,minmax(300px,1fr));
+}
+
+.michis-card{
+    position:relative; /*required as a parent in order to have the fav buton floating over it*/
+    max-width: 300px;
+    max-height: 300px;
+    overflow: hidden;
+}
+.michis-card img{
+    width: 100%;
+    /* position: absolute; */
+    border-radius: 10px;
+}
+
+.michis-card p{
+    top: 10px;
+    right: 10px;
+}
+
+.fav-btn {
+    position: absolute; /*required in order to be 'floating' inside the card*/
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    top: 10px;
+    left: 10px;
+    padding: 10px 10px 10px 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    background-color: #e8a7a7;
+    color:#fff;
+  }
+.fav-btn:hover{
+    cursor: pointer;
+}
+  
+.fav-btn img {
+    width: 20px;    
+}
+/*   
+.fav-container:hover {
+    background-color: #e57373; 
+}  */
