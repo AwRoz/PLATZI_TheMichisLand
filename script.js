@@ -1,5 +1,6 @@
 const ApiRandomEndpoint = 'https://api.thecatapi.com/v1/images/search'
-const APiFavEndpoint = 'https://api.thecatapi.com/v1/favourites'
+const ApiFavEndpoint = 'https://api.thecatapi.com/v1/favourites'
+const ApiUploadEndpoint = 'https://api.thecatapi.com/v1/images/upload'
 const ApiKey = 'live_TDVyIWPpiZsKxPbuVhqeMvmY0lrxo44jTBGlVLOf10qbgOojQy4aNTZtUPE2Cyp0'
 const michisLimit= 4
 
@@ -25,7 +26,7 @@ async function getRandomMichis(){
             ${randomMichis.map(michi =>`
                 <div class="michi-card">
                     <img src="${michi.url}"," alt="a cat picture">
-                    <button class="fav-btn" data-id="${michi.id}">
+                    <button class="fav-btn" data-id="${michi.id}" type="button">
                         Add to
                         <img src="./assets/favorite.png" alt="favoriteIcon">
                     </button>
@@ -57,13 +58,13 @@ async function getRandomMichis(){
 async function getFavoriteMichis(){
     favoritesCards.innerHTML = ''
     try{
-        const favorites = await fetchData(`${APiFavEndpoint}?api_key=${ApiKey}`)
+        const favorites = await fetchData(`${ApiFavEndpoint}?api_key=${ApiKey}`)
         console.log(favorites)
         const view = `
             ${favorites.map(michi => `
                 <div class="michi-card">
                     <img src="${michi.image.url}"," alt="a cat picture">
-                    <button class="remove-btn" data-id="${michi.id}">
+                    <button class="remove-btn" data-id="${michi.id}" type="button">
                         X
                     </button>
                     <a href="" class="remove"></a>
@@ -86,7 +87,7 @@ async function getFavoriteMichis(){
 
 async function saveFavoriteMichis(id){
     try{
-        const res = await fetch(APiFavEndpoint,{
+        const res = await fetch(ApiFavEndpoint,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,7 +108,7 @@ async function saveFavoriteMichis(id){
 
 async function deleteFavorite(id){
     try{
-        const res = await fetch(`${APiFavEndpoint}/${id}`,{
+        const res = await fetch(`${ApiFavEndpoint}/${id}`,{
             method:'DELETE',
             headers:{
                 'content-type':'application/json',
@@ -119,6 +120,32 @@ async function deleteFavorite(id){
     }catch(err){
         errorBlock.innerHTML = (`Ha ocurrido el siguiente error: ${err}`)
     }
+}
+
+async function uploadMichi(file){
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('Sub_id','fafafacha123')
+    try{
+        const res = await fetch(ApiUploadEndpoint,{
+            method:'POST',
+            headers:{
+                'x-api-key': ApiKey
+            },
+            body:formData,
+        })
+        console.log(await res.json())
+        console.log('Michi cargado exitosamente!!!')
+    }catch(err){
+        errorBlock.innerHTML = (`Ha ocurrido el siguiente error: ${err}`)   
+    }
+
+}
+
+async function formEvent(){
+    const fileInput = document.getElementById('file')
+    const file = fileInput.files[0]
+    uploadMichi(file)
 }
 getRandomMichis()
 getFavoriteMichis()

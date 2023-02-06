@@ -8,14 +8,14 @@
     <title>The Michis Land</title>
 </head>
 <body>
-    <nav>
-        <a href="#">The Michis Land</a>
-        <div id="profile-container">
-            <a href="#">
-                <img src="" alt="profilePicture">
-            </a>
-        </div>
-    </nav>
+    <section id="uploadMichi">
+        <h3>Upload your Michis!!</h3>
+        <p>You can upload to the database your own michis</p>
+        <form id="uploadForm">
+            <input id="file" type="file" name="file">
+            <button type="button" onclick="formEvent()">Subir Michi</button>
+        </form>
+    </section>
     <span id="error"></span>
     <main>
         <section id="random-michis-section">
