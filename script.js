@@ -1,27 +1,31 @@
+//define each of the endpoints
 const ApiRandomEndpoint = 'https://api.thecatapi.com/v1/images/search'
 const ApiFavEndpoint = 'https://api.thecatapi.com/v1/favourites'
 const ApiUploadEndpoint = 'https://api.thecatapi.com/v1/images/upload'
+//ApiKey - for future projects it should use better auth system
 const ApiKey = 'live_TDVyIWPpiZsKxPbuVhqeMvmY0lrxo44jTBGlVLOf10qbgOojQy4aNTZtUPE2Cyp0'
+//Adding a limit to the resoults when gettin the random images - it could be defined by the user
 const michisLimit= 4
 
+//Elements for DOM manipulation
 const errorBlock = document.getElementById('error')
 const michisCards = document.querySelector('.random-michis-cards')
 const favoritesCards = document.querySelector('.fav-cards-container')
 
 
-
-
+//main fetch function.
 async function fetchData(endpoint){
     const res = await fetch(endpoint)
     return res.json()
 }
 
 async function getRandomMichis(){
+    //cleaning fevorites block
     michisCards.innerHTML = ''
     try{
         const randomMichis = await 
         fetchData(`${ApiRandomEndpoint}?api_key=${ApiKey}&limit=${michisLimit}`)
-        console.log(randomMichis)
+        //this view iterates all items returned from the fetch operation
         let view = `
             ${randomMichis.map(michi =>`
                 <div class="michi-card">
@@ -30,11 +34,12 @@ async function getRandomMichis(){
                         Add to
                         <img src="./assets/favorite.png" alt="favoriteIcon">
                     </button>
-                    <a href="" class="remove"></a>
                     <p class="desc">this is a michi!</p>
                 </div>
             `).slice(0,randomMichis.lenght).join('')}
         `
+        //the slice and join methods are for a correct html rendering
+        //then the view is inserted in the html
         michisCards.innerHTML = view
 
         /// This code is selecting all the elements with class 'fav-btn' and storing them in the "favButtons" constant.
@@ -46,6 +51,7 @@ async function getRandomMichis(){
                 const id = event.target.dataset.id
                 // Finally, the "saveFavoriteMichis" function is called with the "id" parameter.
                 saveFavoriteMichis(id)
+                //reload the favorites, wich will load all the favorited pictures
                 getFavoriteMichis()
             })
         })
@@ -73,10 +79,12 @@ async function getFavoriteMichis(){
             `).slice(0,favorites.lenght).join('')}
         `
         favoritesCards.innerHTML = view
+        //now we add an event listener to all the .remove-btn in the loaded favorite pictures
         const favBtns = document.querySelectorAll('.remove-btn')
         favBtns.forEach(btn =>{
             btn.addEventListener('click', (event) =>{
                 const id = event.target.dataset.id
+                //this will allow to trigger the defeteFavorite function in order to delete the selected picture
                 deleteFavorite(id)
             })
         })
@@ -116,6 +124,7 @@ async function deleteFavorite(id){
             }
         })
         console.log('Michi eliminado de favoritos!!')
+        //reload the favorites section
         getFavoriteMichis()
     }catch(err){
         errorBlock.innerHTML = (`Ha ocurrido el siguiente error: ${err}`)
@@ -123,9 +132,11 @@ async function deleteFavorite(id){
 }
 
 async function uploadMichi(file){
+    //creating an instance of the prototype FormData()
     const formData = new FormData()
-    formData.append('file', file)
-    formData.append('Sub_id','fafafacha123')
+	//Adding parameters
+    formData.append('file', file) // * REQUIRED
+    formData.append('Sub_id','fafafacha123') //optional
     try{
         const res = await fetch(ApiUploadEndpoint,{
             method:'POST',
@@ -139,7 +150,6 @@ async function uploadMichi(file){
     }catch(err){
         errorBlock.innerHTML = (`Ha ocurrido el siguiente error: ${err}`)   
     }
-
 }
 
 async function formEvent(){
